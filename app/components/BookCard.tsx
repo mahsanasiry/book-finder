@@ -1,9 +1,30 @@
 import type { Book } from "../types/book";
 
-export default function BookCard({ book }: { book: Book }) {
+type Props = {
+  book: Book;
+  isFavorite: boolean;
+  onToggleFavorite: (book: Book) => void;
+};
+
+export default function BookCard({ book, isFavorite, onToggleFavorite }: Props) {
   return (
-    <article className="flex flex-col gap-2 rounded-xl bg-white p-4 shadow-sm">
+    <article className="relative flex flex-col gap-2 rounded-xl bg-white p-4 shadow-sm">
+      <button
+        type="button"
+        onClick={() => onToggleFavorite(book)}
+        aria-pressed={isFavorite}
+        aria-label={
+          isFavorite
+            ? `Remove ${book.title} from favorites`
+            : `Add ${book.title} to favorites`
+        }
+        className="absolute right-3 top-3 rounded-full bg-white/90 px-2 py-1 text-xl leading-none shadow hover:bg-white"
+      >
+        {isFavorite ? "♥" : "♡"}
+      </button>
+
       {book.cover ? (
+        // eslint-disable-next-line @next/next/no-img-element
         <img
           src={book.cover}
           alt={`Cover of ${book.title}`}
