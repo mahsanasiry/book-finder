@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Book } from "../types/book";
 
 type Props = {
@@ -38,14 +39,14 @@ export default function BookCard({ book, isFavorite, onToggleFavorite }: Props) 
       <h2 className="text-base font-semibold">{book.title}</h2>
       <p className="text-sm">{book.authors.join(", ")}</p>
       <p className="text-sm text-gray-500">{book.publisher}</p>
-      <a
-        href={book.infoLink}
+      <Link
+        href={`/book?id=${encodeURIComponent(book.id)}`}
         target="_blank"
         rel="noopener noreferrer"
         className="mt-auto rounded-lg bg-blue-600 p-2 text-center text-white hover:bg-blue-700"
       >
         More details
-      </a>
+      </Link>
     </article>
   );
 }
