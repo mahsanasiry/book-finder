@@ -6,6 +6,10 @@ import BookCard from "./components/BookCard";
 import { searchBooks } from "./lib/searchBooks";
 import { useFavorites } from "./lib/useFavorites";
 import type { Book } from "./types/book";
+import ResultControls from "./components/ResultControls";
+import type { SortOption } from "./components/ResultControls";
+
+
 
 type Status = "idle" | "loading" | "success" | "error";
 type View = "search" | "favorites";
@@ -15,6 +19,8 @@ export default function Home() {
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [view, setView] = useState<View>("search");
+  const [sort, setSort] = useState<SortOption>("relevance");
+  const [coverOnly, setCoverOnly] = useState(false);
   const { favorites, isFavorite, toggleFavorite } = useFavorites();
 
   async function handleSearch(query: string) {
@@ -34,6 +40,19 @@ export default function Home() {
   }
 
   const visibleBooks = view === "search" ? books : favorites;
+
+  const filteredBooks = visibleBooks.filter(
+    (book) => !coverOnly || book.cover !== null
+  );
+
+  const displayedBooks =
+    sort === "relevance"
+      ? filteredBooks
+      : [...filteredBooks].sort((a, b) =>
+          sort === "title-asc"
+            ? a.title.localeCompare(b.title)
+            : b.title.localeCompare(a.title)
+        );
 
   const tabClass = (active: boolean) =>
     `rounded-lg px-4 py-2 text-sm font-medium ${
@@ -62,6 +81,15 @@ export default function Home() {
         </button>
       </div>
 
+      {visibleBooks.length > 0 && (
+        <ResultControls
+          sort={sort}
+          onSortChange={setSort}
+          coverOnly={coverOnly}
+          onCoverOnlyChange={setCoverOnly}
+        />
+      )}
+
       {view === "search" && status === "loading" && (
         <p className="text-center">Loading...</p>
       )}
@@ -76,9 +104,12 @@ export default function Home() {
           You have no favorites yet. Tap the heart on a book to save it.
         </p>
       )}
+      {visibleBooks.length > 0 && displayedBooks.length === 0 && (
+        <p className="text-center">No books match your filters.</p>
+      )}
 
       <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-4">
-        {visibleBooks.map((book) => (
+        {displayedBooks.map((book) => (
           <BookCard
             key={book.id}
             book={book}
