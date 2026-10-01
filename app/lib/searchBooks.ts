@@ -12,8 +12,14 @@ type GoogleVolume = {
 };
 
 export async function searchBooks(query: string): Promise<Book[]> {
-  const url = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&maxResults=12`;
+  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_BOOKS_API_KEY;
+  const keyPart = apiKey ? `&key=${apiKey}` : "";
+  const url = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&maxResults=12${keyPart}`;
   const response = await fetch(url);
+
+  if (response.status === 429) {
+    throw new Error("Too many requests. Please wait a moment and try again.");
+  }
 
   if (!response.ok) {
     throw new Error("Network request failed");
