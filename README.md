@@ -14,6 +14,7 @@ Book Finder lets you type a title, author or keyword and instantly see matching 
 - Search books by title, author or keyword
 - Book cards with cover image, authors, publisher and a "More details" link
 - Clear **loading**, **empty-result** and **error** states, including a friendly message when the API rate limit is reached
+- Favorites list saved in the browser, so your picks stay after a refresh
 - Fallback placeholder when a book has no cover
 - Fully responsive layout for mobile, tablet and desktop
 - Accessible form: labelled input, keyboard-friendly, descriptive image alt text
@@ -85,7 +86,7 @@ The static site is generated in the `out` folder.
 
 ## Roadmap
 
-- [ ] Favorites list saved in the browser
+- [x] Favorites list saved in the browser
 - [ ] Book details page with a dynamic route
 - [ ] Sorting and filtering of search results
 - [ ] Pagination for large result sets
